@@ -20,7 +20,7 @@ from pandas_datareader import data, wb
 #For time stamps 
 from datetime import datetime, timedelta
 
-my_api_key = '58c1888975b0463cb9fd5d6e3d7ebda4'
+NYT_API = 'bKgOSmaa4IIJZdC0DE1G5ticaqGh6Qns'
 
 class Stock:
     stock_name = ""
@@ -29,6 +29,11 @@ class Stock:
     date_to = '30/12/2021'
     stock_close_values = pd.DataFrame()
     
+    """ Initialize stock. Default dates are from:
+                        December 11th, 2019
+                        December 30th, 2021
+        User can choose to initialize form dataframe file (Pickle) by providing dataframe URL.
+    """
     def __init__(self, name, from_date='11/12/2019', to_date='30/12/2021', df_file = None):
         self.stock_name = name
         self.date_from = from_date
@@ -71,7 +76,7 @@ class Stock:
     def get_gaussian_values(self, fwhm):
         sigma = fwhm / np.sqrt(8 * np.log(2))
         x_vals = np.arange(self.df.shape[0])
-        y_vals = apple.stock_close_values
+        y_vals = self.stock_close_values
         smoothed_vals = np.zeros(y_vals.shape)
         for x_position in x_vals:
             kernel = np.exp(-(x_vals - x_position) ** 2 / (2 * sigma ** 2))
@@ -114,11 +119,3 @@ class Stock:
             self.df.to_pickle(file_path)
         else:
             self.df.to_pickle("./{}.pkl".format(self.stock_name))
-    
-
-
-apple =  Stock("AAPL")
-gaussian_values = apple.get_gaussian_values(3)
-apple.plot_min_max(gaussian_values)
-apple.plot_gaussian(3)
-apple.show_plot()
