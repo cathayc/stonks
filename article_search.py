@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 nyt = NYTAPI('bKgOSmaa4IIJZdC0DE1G5ticaqGh6Qns', parse_dates=True)
 from main import Stock
 import requests
+import webbrowser
 
 def search_nyt(my_query, begin, end, max_articles=5, delta=1):
     articles = nyt.article_search(
@@ -40,6 +41,10 @@ def extract_searchTick_response(response):
         story['time'] = datetime.fromtimestamp(story['time']/1000)
     return stories
 
+def open_pages(stories, url='url'):
+    for story in stories:
+        webbrowser.open(story[url])
+        
 
 def main():
     apple =  Stock("AAPL")
