@@ -1,6 +1,7 @@
-Make & start a virtual env:
-python3 -m venv .venv
-source .venv/bin/activate
+## Make & start a virtual env:
+Make virtual environment: `python3 -m venv .venv`
 
-Install requirements
-pip install -r requirements.txt
+Start the env: `source .venv/bin/activate`
+
+## Install requirements
+`pip install -r requirements.txt`
