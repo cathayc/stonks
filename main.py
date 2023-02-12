@@ -1,6 +1,6 @@
 from os import close
-import investpy
 import sys
+import yfinance as yf
 
 import pandas as pd
 from pandas import Series, DataFrame
@@ -25,16 +25,16 @@ NYT_API = 'bKgOSmaa4IIJZdC0DE1G5ticaqGh6Qns'
 class Stock:
     stock_name = ""
     df = pd.DataFrame()
-    date_from = '1/12/2020'
-    date_to = '30/12/2021'
+    date_from = '1/12/2021'
+    date_to = '30/12/2022'
     stock_close_values = pd.DataFrame()
     
     """ Initialize stock. Default dates are from:
-                        December 11th, 2019
-                        December 30th, 2021
+                        1/1/2021
+                        1/1/2023
         User can choose to initialize form dataframe file (Pickle) by providing dataframe URL.
     """
-    def __init__(self, name, from_date='11/12/2019', to_date='30/12/2021', df_file = None):
+    def __init__(self, name, from_date='2021-01-01', to_date='2022-01-01', df_file = None):
         self.stock_name = name
         self.date_from = from_date
         self.date_to = to_date
@@ -44,9 +44,10 @@ class Stock:
         if not df_file:
             try:
                 self.df = self.get_stock_data()
+                print(self.df.head())
                 self.stock_close_values = self.df['Close']
             except:
-                print("Error retrieving initial stock data from investpy.")
+                print("Error retrieving initial stock data from yfinance.")
                 sys.exit(1)
         else:
             try:
@@ -58,10 +59,8 @@ class Stock:
 
     #### GET ####
     def get_stock_data(self):
-        self.df = investpy.get_stock_historical_data(stock=self.stock_name,
-                                            country='United States',
-                                            from_date = self.date_from,
-                                            to_date = self.date_to)
+        self.df = yf.download(self.stock_name, start=self.date_from, end=self.date_to)
+        print(self.df.head)
         return self.df
 
     def get_moving_avg(self, range):
